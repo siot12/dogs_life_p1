@@ -6,7 +6,7 @@ import com.db.grad.javaapi.repository.DogsRepositoryStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class DogHandlerTest {
 
@@ -28,6 +28,46 @@ public class DogHandlerTest {
 
         long actualResult = cut.getNoOfDogs();
         assertEquals( expectedResult, actualResult );
+    }
 
+    @Test
+    public void unique_dog_name()
+    {
+        DogHandler cut = new DogHandler(itsDogRepo);
+        Dog d1 = new Dog();
+        d1.setName("Marcel");
+        Dog d2 = new Dog();
+        d2.setName("Pluto");
+        Dog d3 = new Dog();
+        d3.setName("Marcel");
+        cut.addDog(d1);
+        cut.addDog(d2);
+        cut.addDog(d3);
+        Dog result = cut.getDogByName("Pluto");
+        assertEquals("Pluto",result.getName());
+        Dog result1 = cut.getDogByName("Marcel");
+        assertNull(result1);
+        Dog result3 = cut.getDogByName("Alex");
+        assertNull(result3);
+    }
+    @Test
+    public void unique_id()
+    {
+        DogHandler cut = new DogHandler(itsDogRepo);
+        Dog d1 = new Dog();
+        d1.setId(1);
+        cut.addDog(d1);
+        assertNull(cut.getDogById(2));
+    }
+
+    @Test
+    public void update_works()
+    {
+        DogHandler cut = new DogHandler(itsDogRepo);
+        Dog d1 = new Dog();
+        d1.setId(1);
+        d1.setName("Vlad");
+        cut.addDog(d1);
+        assertEquals(1,cut.getDogDetails(d1));
     }
 }
